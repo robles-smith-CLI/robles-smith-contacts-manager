@@ -1,17 +1,21 @@
 package ContactsApp;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class Contact {
     Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+//    ArrayList<ContactInfo> Contacts = new ArrayList<>();
 
     public static void listStart() {
         String directory = "src/ContactsApp";
@@ -52,11 +56,32 @@ public class Contact {
         String addName = scanner.next();
         System.out.println("Enter Number: ");
         long addNumber = scanner.nextLong();
-        ContactInfo newContact = new ContactInfo(addName,addNumber);
+//        ContactInfo newContact = new ContactInfo(addName, addNumber);
         String formattedAdd = String.format("%-7s | %-12d |", addName, addNumber);
         try {
+            List<String> contacts = Files.readAllLines(dataFile);
+            List<String> bucket = new ArrayList<>();
+            for (String contact : contacts) {
+
+                if (contact.contains(formattedAdd)) {
+                    System.err.printf("Theres already a contacted name %s. Do you want to overwrite it? (True/False)\n", formattedAdd);
+                    if (scanner.nextBoolean()) {
+                        bucket.add(formattedAdd);
+//                        Files.write(dataFile, bucket);
+                    } else {
+                        System.out.println("Enter name: ");
+                        String sameName = scanner.next();
+                        System.out.println("Enter Number: ");
+                        long sameNumber = scanner.nextLong();
+                        String sameContact = String.format("%-7s | %-12d |", sameName, sameNumber);
+                        bucket.add(sameContact);
+                    }
+                    continue;
+                }
+                bucket.add(contact);
+            }
             Files.write(
-                    dataFile, Arrays.asList(formattedAdd), StandardOpenOption.APPEND
+                    dataFile, bucket
             );
         } catch (IOException e) {
             e.printStackTrace();
@@ -140,7 +165,6 @@ public class Contact {
                 bye(dataFile);
         }
     }
-
 
 
     public static void main(String[] args) {
