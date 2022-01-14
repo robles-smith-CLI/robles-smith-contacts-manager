@@ -1,6 +1,7 @@
-bob     | 1231231234
-steve   | 456123794
-larry   | 1231231234 |
-tim     | 7894561234     |
-jim     | 1234567890   |
-ContactsApp.ContactInfo@7dc7cbad
+steve jobs      | 1231231234     |
+jim carrey      | 4561234561     |
+tom tomerson    | 5454545454     |
+kyle kylerson   | 7894561234     |
+brittany bella  | 7894561234     |
+deborah         | 7894561234     |
+bugs bunny      | 7894561234     |
