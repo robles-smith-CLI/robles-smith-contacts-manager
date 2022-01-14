@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -36,10 +37,21 @@ public class Contact {
     public static void viewContacts(Path dataFile) {
         try {
             List<String> contacts = Files.readAllLines(dataFile);
-            System.out.println(String.format("%-7s | %-12s |", "Name", "Phone number"));
-            System.out.println("------------------------");
+            System.out.println(String.format("%-15s | %-16s |", "Name", "Phone number"));
+            System.out.println("------------------------------------");
             for (String contact : contacts) {
-                System.out.println(contact);
+                String[] contactArray = contact.split("");
+                List<String> newArray = new ArrayList<String>();
+                for(String text : contactArray) {
+                    newArray.add(text);
+                }
+                newArray.add(21, "-");
+                newArray.add(25, "-");
+                String str = "";
+                for (String text : newArray) {
+                    str += text;
+                }
+                System.out.println(str);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -52,8 +64,8 @@ public class Contact {
         String addName = scanner.next();
         System.out.println("Enter Number: ");
         long addNumber = scanner.nextLong();
-        ContactInfo newContact = new ContactInfo(addName,addNumber);
-        String formattedAdd = String.format("%-7s | %-12d |", addName, addNumber);
+//        ContactInfo newContact = new ContactInfo(addName,addNumber);
+        String formattedAdd = String.format("%-15s | %-14d |", addName, addNumber);
         try {
             Files.write(
                     dataFile, Arrays.asList(formattedAdd), StandardOpenOption.APPEND
@@ -67,11 +79,24 @@ public class Contact {
         Scanner scanner = new Scanner(System.in).useDelimiter("\n");
         System.out.println("Enter the name of who you are looking for: ");
         String findName = scanner.next();
+        System.out.println(String.format("%-15s | %-16s |", "Name", "Phone number"));
+        System.out.println("------------------------------------");
         try {
             List<String> contacts = Files.readAllLines(dataFile);
             for (String contact : contacts) {
                 if (contact.contains(findName)) {
-                    System.out.println(contact);
+                    String[] contactArray = contact.split("");
+                    List<String> newArray = new ArrayList<String>();
+                    for(String text : contactArray) {
+                        newArray.add(text);
+                    }
+                    newArray.add(21, "-");
+                    newArray.add(25, "-");
+                    String str = "";
+                    for (String text : newArray) {
+                        str += text;
+                    }
+                    System.out.println(str);
                 }
             }
         } catch (IOException e) {
