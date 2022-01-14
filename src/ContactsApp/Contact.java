@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Contact {
+    Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
     public static void listStart() {
         String directory = "src/ContactsApp";
@@ -32,82 +33,194 @@ public class Contact {
         }
     }
 
-    public static void main(String[] args) {
+    public static void viewContacts(Path dataFile) {
+        try {
+            List<String> contacts = Files.readAllLines(dataFile);
+            System.out.println(String.format("%-7s | %-12s |", "Name", "Phone number"));
+            System.out.println("------------------------");
+            for (String contact : contacts) {
+                System.out.println(contact);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void addContacts(Path dataFile) {
+        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+        System.out.println("Enter name: ");
+        String addName = scanner.next();
+        System.out.println("Enter Number: ");
+        long addNumber = scanner.nextLong();
+        ContactInfo newContact = new ContactInfo(addName,addNumber);
+        String formattedAdd = String.format("%-7s | %-12d |", addName, addNumber);
+        try {
+            Files.write(
+                    dataFile, Arrays.asList(formattedAdd), StandardOpenOption.APPEND
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void findContacts(Path dataFile) {
+        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+        System.out.println("Enter the name of who you are looking for: ");
+        String findName = scanner.next();
+        try {
+            List<String> contacts = Files.readAllLines(dataFile);
+            for (String contact : contacts) {
+                if (contact.contains(findName)) {
+                    System.out.println(contact);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteContacts(Path dataFile) {
+        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+        System.out.println("Enter the name of who you want to delete: ");
+        String deleteName = scanner.next();
+        try {
+            List<String> contacts = Files.readAllLines(dataFile);
+            contacts.removeIf(contact -> contact.contains(deleteName));
+            Files.write(dataFile, contacts);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void bye(Path dataFile) {
+        try {
+            List<String> contacts = Files.readAllLines(dataFile);
+            Files.write(dataFile, contacts);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Bye.");
+    }
+
+    public static void contactMenu() {
         String directory = "src/ContactsApp";
         String filename = "contacts.txt";
-        Path dataDirectory = Paths.get(directory);
         Path dataFile = Paths.get(directory, filename);
-
         Scanner scanner = new Scanner(System.in).useDelimiter("\n");
-        listStart();
 
         List<String> menuList = Arrays.asList("View contacts.", "Add a new contact.", "Search a contact by name.", "Delete an existing contact.", "Exit.");
         for (int i = 0; i < menuList.size(); i++) {
             System.out.println((i + 1) + ": " + menuList.get(i));
         }
+
         System.out.println("Enter an option (1, 2, 3, 4, or 5)");
         int userInt = scanner.nextInt();
 
         switch (userInt) {
             case 1:
-                try {
-                    List<String> contacts = Files.readAllLines(dataFile);
-                    System.out.println(String.format("%-7s | %-12s |", "Name", "Phone number"));
-                    System.out.println("------------------------");
-                    for (String contact : contacts) {
-                        System.out.println(contact);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                viewContacts(dataFile);
+                System.out.println("--------");
+                contactMenu();
                 break;
             case 2:
-                System.out.println("Enter name: ");
-                String addName = scanner.next();
-                System.out.println("Enter Number: ");
-                long addNumber = scanner.nextLong();
-                String formattedAdd = String.format("%-7s | %-12d |", addName, addNumber);
-                try {
-                    Files.write(
-                            dataFile, Arrays.asList(formattedAdd), StandardOpenOption.APPEND
-                    );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                addContacts(dataFile);
+                System.out.println("--------");
+                contactMenu();
                 break;
             case 3:
-                System.out.println("Enter the name of who you are looking for: ");
-                String findName = scanner.next();
-                try {
-                    List<String> contacts = Files.readAllLines(dataFile);
-                    for (String contact : contacts) {
-                        if (contact.contains(findName)) {
-                            System.out.println(contact);
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                findContacts(dataFile);
+                System.out.println("--------");
+                contactMenu();
                 break;
             case 4:
-                System.out.println("Enter the name of who you want to delete: ");
-                String deleteName = scanner.next();
-                try {
-                    List<String> contacts = Files.readAllLines(dataFile);
-                    contacts.removeIf(contact -> contact.contains(deleteName));
-                    Files.write(dataFile, contacts);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
+                deleteContacts(dataFile);
+                System.out.println("--------");
+                contactMenu();
             case 5:
-                try {
-                    List<String> contacts = Files.readAllLines(dataFile);
-                    Files.write(dataFile, contacts);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                bye(dataFile);
         }
+    }
+
+
+
+    public static void main(String[] args) {
+//        String directory = "src/ContactsApp";
+//        String filename = "contacts.txt";
+//        Path dataDirectory = Paths.get(directory);
+//        Path dataFile = Paths.get(directory, filename);
+//
+//        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+        listStart();
+        contactMenu();
+//
+//        List<String> menuList = Arrays.asList("View contacts.", "Add a new contact.", "Search a contact by name.", "Delete an existing contact.", "Exit.");
+//        for (int i = 0; i < menuList.size(); i++) {
+//            System.out.println((i + 1) + ": " + menuList.get(i));
+//        }
+//        System.out.println("Enter an option (1, 2, 3, 4, or 5)");
+//        int userInt = scanner.nextInt();
+//
+//        switch (userInt) {
+//            case 1:
+//                try {
+//                    List<String> contacts = Files.readAllLines(dataFile);
+//                    System.out.println(String.format("%-7s | %-12s |", "Name", "Phone number"));
+//                    System.out.println("------------------------");
+//                    for (String contact : contacts) {
+//                        System.out.println(contact);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                break;
+//            case 2:
+//                System.out.println("Enter name: ");
+//                String addName = scanner.next();
+//                System.out.println("Enter Number: ");
+//                long addNumber = scanner.nextLong();
+//                String formattedAdd = String.format("%-7s | %-12d |", addName, addNumber);
+//                try {
+//                    Files.write(
+//                            dataFile, Arrays.asList(formattedAdd), StandardOpenOption.APPEND
+//                    );
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                break;
+//            case 3:
+//                System.out.println("Enter the name of who you are looking for: ");
+//                String findName = scanner.next();
+//                try {
+//                    List<String> contacts = Files.readAllLines(dataFile);
+//                    for (String contact : contacts) {
+//                        if (contact.contains(findName)) {
+//                            System.out.println(contact);
+//                        }
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                break;
+//            case 4:
+//                System.out.println("Enter the name of who you want to delete: ");
+//                String deleteName = scanner.next();
+//                try {
+//                    List<String> contacts = Files.readAllLines(dataFile);
+//                    contacts.removeIf(contact -> contact.contains(deleteName));
+//                    Files.write(dataFile, contacts);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                break;
+//            case 5:
+//                try {
+//                    List<String> contacts = Files.readAllLines(dataFile);
+//                    Files.write(dataFile, contacts);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//        }
 
 
     }
