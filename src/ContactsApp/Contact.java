@@ -12,7 +12,19 @@ public class Contact {
 
 
     Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+    public static Scanner sc = new Scanner(System.in).useDelimiter("\n");
     public static List<ContactInfo> contactObjects = new ArrayList<ContactInfo>();
+
+    public boolean yesNo() {
+        String userBoolean = scanner.next();
+        return userBoolean.equalsIgnoreCase("yes") || userBoolean.equalsIgnoreCase("y");
+    }
+
+    public static boolean yesNo(String userPrompt) {
+        System.out.println(userPrompt);
+        String userBoolean = sc.next();
+        return userBoolean.equalsIgnoreCase("yes") || userBoolean.equalsIgnoreCase("y");
+    }
 
 
     public static void listStart() {
@@ -87,7 +99,7 @@ public class Contact {
 
     }
 
-    public static void addContacts(Path dataFile) {
+    public static void addContacts() {
         Scanner scanner = new Scanner(System.in).useDelimiter("\n");
         System.out.println("Enter name: ");
         String addName = scanner.next();
@@ -100,15 +112,43 @@ public class Contact {
             newArray.add(number);
         }
 
-        newArray.add(3, "-");
-        newArray.add(7, "-");
-        String str = "";
-        for (String number : newArray) {
-            str += number;
-        }
+        /// OVERWRITE EXISTING CONTACT LOGIC
+//        for (ContactInfo contact : contactObjects) {
+//            if (contact.getName().equals(addName)) {
+//                if (!yesNo("Contact already exists, would you like to overwrite it? yes/no")) {
+//                addContacts();
+//                }
+//            }
+//        }
+            if (newArray.size() == 10) {
+            newArray.add(3, "-");
+            newArray.add(7, "-");
+                String str = "";
+                for (String number : newArray) {
+                    str += number;
+                }
 
-        ContactInfo newContact = new ContactInfo(addName, str);
-        contactObjects.add(newContact);
+                ContactInfo newContact = new ContactInfo(addName, str);
+                contactObjects.add(newContact);
+            } else if (newArray.size() == 7) {
+            newArray.add(3, "-");
+                String str = "";
+                for (String number : newArray) {
+                    str += number;
+                }
+                ContactInfo newContact = new ContactInfo(addName, str);
+                contactObjects.add(newContact);
+            } else {
+                System.out.println("Invalid number, re-enter contact information.");
+                addContacts();
+            }
+//        String str = "";
+//        for (String number : newArray) {
+//            str += number;
+//        }
+
+//        ContactInfo newContact = new ContactInfo(addName, str);
+//        contactObjects.add(newContact);
 //        String formattedAdd = String.format("%-15s | %-14d |", addName, addNumber);
 //        try {
 //            Files.write(
@@ -119,7 +159,7 @@ public class Contact {
 //        }
     }
 
-    public static void findContacts(Path dataFile) {
+    public static void findContacts() {
         Scanner scanner = new Scanner(System.in).useDelimiter("\n");
         System.out.println("Enter the name of who you are looking for: ");
         String findName = scanner.next();
@@ -160,7 +200,7 @@ public class Contact {
 
     }
 
-    public static void deleteContacts(Path dataFile) {
+    public static void deleteContacts() {
         Scanner scanner = new Scanner(System.in).useDelimiter("\n");
         System.out.println("Enter the name of who you want to delete: ");
         String deleteName = scanner.next();
@@ -205,17 +245,17 @@ public class Contact {
                 contactMenu();
                 break;
             case 2:
-                addContacts(dataFile);
+                addContacts();
                 System.out.println("--------");
                 contactMenu();
                 break;
             case 3:
-                findContacts(dataFile);
+                findContacts();
                 System.out.println("--------");
                 contactMenu();
                 break;
             case 4:
-                deleteContacts(dataFile);
+                deleteContacts();
                 System.out.println("--------");
                 contactMenu();
             case 5:
