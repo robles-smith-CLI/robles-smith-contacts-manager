@@ -41,6 +41,7 @@ public class Contact {
                 List<String> newArray = new ArrayList<String>();
                 for (String text : contactArray) {
                     newArray.add(text);
+//                    ContactInfo c1 = new ContactInfo(text);
                 }
                 newArray.add(21, "-");
                 newArray.add(25, "-");

@@ -4,6 +4,12 @@ public class ContactInfo {
     protected String name;
     protected String number;
 
+    public ContactInfo(String text) {
+        String[]textarray = text.split("|");
+        textarray[0] = this.name;
+        textarray[1] = this.number;
+    }
+
     public String getName() {
         return name;
     }
