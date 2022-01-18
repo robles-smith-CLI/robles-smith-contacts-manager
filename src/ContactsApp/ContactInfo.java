@@ -5,9 +5,9 @@ public class ContactInfo {
     protected String number;
 
     public ContactInfo(String text) {
-        String[]textarray = text.split("|");
-        textarray[0] = this.name;
-        textarray[1] = this.number;
+        String[]textarray = text.split("\\|");
+        this.name = textarray[0].trim();
+        this.number = textarray[1].trim();
     }
 
     public String getName() {
@@ -32,7 +32,7 @@ public class ContactInfo {
     }
 @Override
    public String toString() {
-        return String.format("%-15s | %-14s |", this.name, this.number);
+        return String.format("%-15s | %-16s |", this.name, this.number);
    }
 
     public ContactInfo() {
