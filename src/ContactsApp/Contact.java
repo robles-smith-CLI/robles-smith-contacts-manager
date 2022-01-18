@@ -6,10 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Contact {
     Scanner scanner = new Scanner(System.in).useDelimiter("\n");
@@ -42,7 +39,7 @@ public class Contact {
             for (String contact : contacts) {
                 String[] contactArray = contact.split("");
                 List<String> newArray = new ArrayList<String>();
-                for(String text : contactArray) {
+                for (String text : contactArray) {
                     newArray.add(text);
                 }
                 newArray.add(21, "-");
@@ -63,12 +60,12 @@ public class Contact {
         System.out.println("Enter name: ");
         String addName = scanner.next();
         System.out.println("Enter Number: ");
-        long addNumber = scanner.nextLong();
-//        ContactInfo newContact = new ContactInfo(addName,addNumber);
-        String formattedAdd = String.format("%-15s | %-14d |", addName, addNumber);
+        String addNumber = scanner.next();
+        ContactInfo newContact = new ContactInfo(addName, addNumber);
+//        String formattedAdd = String.format("%-15s | %-14d |", addName, addNumber);
         try {
             Files.write(
-                    dataFile, Arrays.asList(formattedAdd), StandardOpenOption.APPEND
+                    dataFile, Arrays.asList(newContact.toString()), StandardOpenOption.APPEND
             );
         } catch (IOException e) {
             e.printStackTrace();
@@ -87,7 +84,7 @@ public class Contact {
                 if (contact.contains(findName)) {
                     String[] contactArray = contact.split("");
                     List<String> newArray = new ArrayList<String>();
-                    for(String text : contactArray) {
+                    for (String text : contactArray) {
                         newArray.add(text);
                     }
                     newArray.add(21, "-");
@@ -165,7 +162,6 @@ public class Contact {
                 bye(dataFile);
         }
     }
-
 
 
     public static void main(String[] args) {
